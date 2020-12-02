@@ -61,7 +61,8 @@ def detail(plant_id):
 
     context = {
         'plant' : plant_to_show,
-        'harvests': harvests
+        'harvests': harvests,
+        'plant_id': ObjectId(plant_id),
     }
     return render_template('detail.html', **context)
 
