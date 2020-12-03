@@ -76,12 +76,12 @@ def harvest(plant_id):
     # detail page form.
     new_harvest = {
         'quantity': request.form.get('harvested_amount'), # e.g. '3 tomatoes'
-        'date': request.form.get('date_planned'),
-        'plant_id': plant_id
+        'date': request.form.get('date_harvested'),
+        'plant_id': ObjectId(plant_id)
     }
 
     
-    insert_harvest = mongo.db.harvests.insert_one(new_harvest)
+    mongo.db.harvests.insert_one(new_harvest)
     return redirect(url_for('detail', plant_id=plant_id))
 
 @app.route('/edit/<plant_id>', methods=['GET', 'POST'])
@@ -123,11 +123,15 @@ def edit(plant_id):
 
 @app.route('/delete/<plant_id>', methods=['POST'])
 def delete(plant_id):
-    # TODO: Make a `delete_one` database call to delete the plant with the given
+    #  Make a `delete_one` database call to delete the plant with the given
     # id.
 
-    # TODO: Also, make a `delete_many` database call to delete all harvests with
+    mongo.db.plants.delete_one({'id': ObjectId(plant_id)})
+
+    # Also, make a `delete_many` database call to delete all harvests with
     # the given plant id.
+
+    mongo.db.harvests.delete_many({"_id": ObjectId(plant_id)})
 
     return redirect(url_for('plants_list'))
 
